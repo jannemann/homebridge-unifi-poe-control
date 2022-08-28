@@ -49,14 +49,16 @@ module.exports = class UniFiPoeControl {
     while (true) {
       try {
         await this.refreshDevices();
-      } catch (e) { }
+      } catch (error) {
+        this.log.error(error)
+      }
 
       await delay(interval);
     }
   }
 
   async refreshDevices() {
-    this.log.info('Refreshing devices...');
+    this.log.debug('Refreshing devices...');
 
     try {
       let sites = await this.client.getSites();
@@ -66,7 +68,9 @@ module.exports = class UniFiPoeControl {
 
         await this.loadDevices(site, devices.data);
       }
-    } catch (e) { }
+    } catch (error) {
+      this.log.error(error)
+    }
   }
 
   async loadDevices(site, devices) {
